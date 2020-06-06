@@ -126,7 +126,6 @@ router.get(
                 logs,
                 log,
                 requestData,
-                items: [1, 2, 3, {a: 1, b: 2}]
             });
         } catch (err) {
             console.log(err);
