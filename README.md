@@ -13,3 +13,15 @@ sudo docker run \
     <image_name>:<image_tag>
 
 ```
+
+
+## Screenshots
+
+### Create
+![Create](screenshots/create.png?raw=true "Create")
+
+### Edit
+![Edit](screenshots/edit.png?raw=true "Edit")
+
+### View Logs
+![View Logs](screenshots/logs.png?raw=true "View Logs")
