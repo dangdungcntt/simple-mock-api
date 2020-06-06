@@ -1,0 +1,138 @@
+{% extends "layout.twig" %}
+
+{% block left %}
+    <h6 class="text-center">Request Logs:
+        <strong>{{ requestData.name | default(requestData.id) }}</strong>
+        | <a href="/requests/{{ requestData.id }}/edit">Edit</a>
+        | <a href="{{ requestData.url }}" target="_blank">URL</a></h6>
+    <div class="list-group">
+        {% for logItem in logs %}
+            <a href="/requests/{{ requestData.id }}/logs/{{ logItem.id }}"
+               class="list-group-item list-group-item-action {{ " active" if logItem.id == log.id else " " }} p-2">
+                <div style="font-size: .9rem">{{ logItem.method | upper }} - #{{ logItem.id.slice(0, 8) }}
+                    - {{ logItem.ip }}</div>
+                <small>{{ logItem.created_at }}</small>
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            {% if log %}
+                Log ID:
+                <strong>{{ log.id }}</strong>
+            {% endif %}
+        </div>
+        <div class="card-body log-detail">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Request Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="width: 100px">{{ log.method | upper }}</td>
+                            <td><a href="{{ log.full_url }}" target="_blank">{{ log.full_url }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>IP</td>
+                            <td>{{ log.ip }} <a href="https://ip-api.com/{{ log.ip }}" target="_blank">ip-info</a></td>
+                        </tr>
+                        <tr>
+                            <td>Date</td>
+                            <td>{{ log.created_at }}</td>
+                        </tr>
+                        <tr>
+                            <td>ID</td>
+                            <td>{{ log.id }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Request Headers</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, header in log.cleaned_headers %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td style="word-break: break-all">{{ header }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2">(empty)</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Query</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for key, value in log.query %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value | dump | safe }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2">(empty)</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Body</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if log.body %}
+                            <tr>
+                                <td>{{ log.body | dump('\t') }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>(empty)</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% if log.response_body %}
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Response Body</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{{ log.response_body | dump(2) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
