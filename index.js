@@ -20,7 +20,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET || "secret"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const PORT = process.env.PORT || 3406;
+const PORT = process.env.PORT || 8080;
 
 app.use("/api", require("./controller/ApiController"));
 
