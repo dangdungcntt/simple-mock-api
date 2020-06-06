@@ -1,5 +1,7 @@
 # Simple Mock API
 
+Like webhook.site but simpler
+
 ## Docker
 
 ```bash
