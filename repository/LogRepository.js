@@ -57,15 +57,6 @@ module.exports = {
             return false;
         }
     },
-    async findByUserIdAndRequestIdAndId(userId, requestId, id) {
-        try {
-            let dir = this.getRequestDir(userId, requestId);
-            let content = await fs.readFile(`${dir}/${id}.json`);
-            return JSON.parse(content);
-        } catch {
-            return false;
-        }
-    },
     async findAllByUserIdAndRequestId(userId, requestId) {
         try {
             let dir = this.getRequestDir(userId, requestId);
