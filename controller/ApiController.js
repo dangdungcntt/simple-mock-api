@@ -8,10 +8,10 @@ const RequestRepository = require("../repository/RequestRepository");
 const RequestLogger = require("../services/RequestLogger");
 
 router.all("/:userId/:id", async (req, res) => {
+    let { userId, id } = req.params;
 
-    let {userId, id} = req.params;
-
-    let responseBody = undefined
+    let responseBody = undefined;
+    let disableLogs = false;
     try {
         let requestData = await RequestRepository.findByUserIdAndRequestId(
             userId,
@@ -22,17 +22,15 @@ router.all("/:userId/:id", async (req, res) => {
             return res.status(404).send("Request not found");
         }
 
-        req.cleaned_headers = RequestLogger.cleanHeaders(req.headers)
+        req.cleaned_headers = RequestLogger.cleanHeaders(req.headers);
+        disableLogs = requestData.disable_logs;
 
         let defaultContentType = "html";
-        responseBody = nunjunks.renderString(
-            requestData.response_body || "",
-            {
-                query: req.query,
-                body: req.body,
-                headers: req.cleaned_headers,
-            }
-        );
+        responseBody = nunjunks.renderString(requestData.response_body || "", {
+            query: req.query,
+            body: req.body,
+            headers: req.cleaned_headers,
+        });
 
         try {
             responseBody = JSON.parse(responseBody);
@@ -56,6 +54,10 @@ router.all("/:userId/:id", async (req, res) => {
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
+    }
+
+    if (disableLogs) {
+        return;
     }
 
     try {
