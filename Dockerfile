@@ -1,10 +1,12 @@
-FROM node:12-alpine
+FROM keymetrics/pm2:12-alpine
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+ENV NPM_CONFIG_LOGLEVEL warn
+
+RUN npm install --production
 
 COPY . .
 
@@ -12,4 +14,4 @@ VOLUME ["/usr/src/app/storage"]
 
 EXPOSE 3406
 
-CMD [ "node", "index.js" ]
+CMD [ "pm2-runtime", "start", "pm2.json", "--env", "production"]

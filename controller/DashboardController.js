@@ -55,6 +55,10 @@ router.post("/requests/:id", async (req, res) => {
             return res.sendStatus(404);
         }
 
+        if (typeof req.body.disable_logs == "undefined") {
+            req.body.disable_logs = false;
+        }
+
         let data = Object.assign({}, requestData, req.body);
 
         if (typeof data.timeout != "undefined") {
